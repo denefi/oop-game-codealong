@@ -10,7 +10,7 @@ class Game {
     //set Intervall for creatign objects
     setInterval(() => {
       this.obstacles.push(new Obstacle());
-    }, 5000);
+    }, 2000);
     //set interval for movement of obstacles
     setInterval(() => {
       this.obstacles.forEach((obstacle) => {
@@ -22,7 +22,7 @@ class Game {
         obstacle.checkObstacleOutOfScreen();
       });
       }
-    , 100);
+    , 10);
     //Event listener for Player movement with arrow keys.
   }
   attachEventHandlers() {
@@ -47,12 +47,18 @@ class Player {
     
     }
     moveLeft () {
-        this.positionX -- ;
+        this.positionX -=20 ;
+        if (this.positionX < 0) {
+          this.positionX = 0;
+        }
         this.playerElm.style.left = this.positionX + "vw"; 
     }
     
     moveRight() {
-        this.positionX ++; 
+        this.positionX += 20; 
+        if (this.positionX > 90) {
+          this.positionX = 90; 
+        }
         this.playerElm.style.left = this.positionX + "vw"; 
     }
 }
