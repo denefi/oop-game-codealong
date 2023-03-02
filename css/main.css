@@ -1,3 +1,18 @@
 body {
-    background-color: orange;
+    margin: 0;
+    padding: 0;
+}
+
+#board {
+    background-color: aqua;
+    height: 100vh;  
+    position: relative;
+}
+#player {
+    width: 10vw;
+    height: 10vh;
+    background-color: fuchsia;
+    position: absolute;
+    bottom: 0;
+    left: 0;
 }
