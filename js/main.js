@@ -10,11 +10,17 @@ class Game {
     //set Intervall for creatign objects
     setInterval(() => {
       this.obstacles.push(new Obstacle());
-      console.log(this.obstacles);
     }, 5000);
     //set interval for movement of obstacles
     setInterval(() => {
-      this.obstacles.forEach((obstacle) => obstacle.moveDown())
+      this.obstacles.forEach((obstacle) => {
+        obstacle.moveDown();
+        if (obstacle.checkCollision()) {
+          window.location.replace("./../you-loose.html")
+        }
+        obstacle.checkCollision();
+        obstacle.checkObstacleOutOfScreen();
+      });
       }
     , 100);
     //Event listener for Player movement with arrow keys.
@@ -22,7 +28,6 @@ class Game {
   attachEventHandlers() {
     document.addEventListener("keydown", (event) => {
       if (event.key === "ArrowLeft") {
-        console.log()
         this.player.moveLeft();
       } else if (event.key === "ArrowRight") {
         this.player.moveRight();
@@ -59,27 +64,37 @@ class Obstacle {
     this.positionX = Math.floor(Math.random() * 90);
     this.positionY = 100;
     this.width = 10;
-    this.heigth = 10; 
+    this.heigth = 10;
     this.obstacleDiv = document.createElement("div");
     this.parentElm = document.getElementById("board");
-    //call the addDomElement method to append the new obstacle div to the DOM. 
+    //call the addDomElement method to append the new obstacle div to the DOM.
     this.addDomElement();
   }
   addDomElement() {
-    this.obstacleDiv.className = "obstacle"
-    this.obstacleDiv.style.left = this.positionX +"vw";
-    this.obstacleDiv.style.width = this.width + "vw"
-    this.obstacleDiv.style.height = this.heigth + "vh"
+    this.obstacleDiv.className = "obstacle";
+    this.obstacleDiv.style.left = this.positionX + "vw";
+    this.obstacleDiv.style.width = this.width + "vw";
+    this.obstacleDiv.style.height = this.heigth + "vh";
     this.parentElm.appendChild(this.obstacleDiv);
   }
   moveDown() {
     this.positionY--;
     this.obstacleDiv.style.bottom = this.positionY + "vh";
-    this.checkObstacleOutOfScreen();
+  }
+  checkCollision() {
+    if (
+      game.player.positionX < this.positionX + this.width &&
+      game.player.positionX + game.player.width > this.positionX &&
+      game.player.positionY < this.positionY + this.heigth &&
+      game.player.heigth + game.player.positionY > this.positionY
+    ) {
+      return true;
+    }
+    return false;
   }
   checkObstacleOutOfScreen() {
-    //remove Div from DOM and the obstacle from obstacles array. 
-    if(this.positionY < -10) {
+    //remove Div from DOM and the obstacle from obstacles array.
+    if (this.positionY < -10) {
       this.parentElm.removeChild(this.obstacleDiv);
       game.obstacles.shift();
     }
