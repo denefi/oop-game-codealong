@@ -1,10 +1,45 @@
-//Define Class Player
+class Game {
+  constructor(){
+    this.player = null;
+    this.obstacles = [];
+  }
+  startGame() {
+    //initialize Player
+    this.player = new Player();
+    this.attachEventHandlers();
+    //set Intervall for creatign objects
+    setInterval(() => {
+      this.obstacles.push(new Obstacle());
+      console.log(this.obstacles);
+    }, 5000);
+    //set interval for movement of obstacles
+    setInterval(() => {
+      this.obstacles.forEach((obstacle) => obstacle.moveDown())
+      }
+    , 100);
+    //Event listener for Player movement with arrow keys.
+  }
+  attachEventHandlers() {
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        console.log()
+        this.player.moveLeft();
+      } else if (event.key === "ArrowRight") {
+        this.player.moveRight();
+      }
+    });
+  }
+}//Define Class Player
 class Player {
     constructor() {
         this.positionX = 0;
         this.positionY = 0;
+        this.width = 10;
+        this.heigth = 10; 
         this.playerElm = document.getElementById("player");
-
+        this.playerElm.style.width = this.width + "vw";
+        this.playerElm.style.height = this.heigth + "vh"
+    
     }
     moveLeft () {
         this.positionX -- ;
@@ -23,6 +58,8 @@ class Obstacle {
     //Max number is 90 because the obstacle has a width of 10vw.
     this.positionX = Math.floor(Math.random() * 90);
     this.positionY = 100;
+    this.width = 10;
+    this.heigth = 10; 
     this.obstacleDiv = document.createElement("div");
     this.parentElm = document.getElementById("board");
     //call the addDomElement method to append the new obstacle div to the DOM. 
@@ -31,42 +68,23 @@ class Obstacle {
   addDomElement() {
     this.obstacleDiv.className = "obstacle"
     this.obstacleDiv.style.left = this.positionX +"vw";
+    this.obstacleDiv.style.width = this.width + "vw"
+    this.obstacleDiv.style.height = this.heigth + "vh"
     this.parentElm.appendChild(this.obstacleDiv);
   }
   moveDown() {
     this.positionY--;
     this.obstacleDiv.style.bottom = this.positionY + "vh";
-    this.checkDeath();
+    this.checkObstacleOutOfScreen();
   }
-  checkDeath() {
+  checkObstacleOutOfScreen() {
     //remove Div from DOM and the obstacle from obstacles array. 
     if(this.positionY < -10) {
       this.parentElm.removeChild(this.obstacleDiv);
-      obstacles.shift();
+      game.obstacles.shift();
     }
   }
 }
-//initialize Player 
-myPlayer = new Player();
-const obstacles = [];
-//set Intervall for creatign objects
-setInterval(() => { 
-  obstacles.push(new Obstacle);
-  console.log(obstacles)
-}, 5000);
-//set interval for movement of obstacles
-setInterval(() => {
-  for (obstacle of obstacles) {
-    obstacle.moveDown();
-  }
-}, 100); 
-//Event listener for Player movement with arrow keys. 
-document.addEventListener("keydown", (event) =>{
-    if (event.key === "ArrowLeft") {
-        myPlayer.moveLeft();
-    }
-    else if (event.key === "ArrowRight") {
-       myPlayer.moveRight(); 
-    }
-} )
- 
+
+const game = new Game();
+game.startGame();
