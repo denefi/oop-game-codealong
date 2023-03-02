@@ -20,24 +20,32 @@ class Obstacle {
     this.positionX = Math.floor(Math.random() * 90);
     this.positionY = 100;
     this.obstacleDiv = document.createElement("div");
+    this.parentElm = document.getElementById("board");
     this.createDomElement();//create dom element
   }
   createDomElement() {
     this.obstacleDiv.className = "obstacle"
-    const parentElm = document.getElementById("board");
     this.obstacleDiv.style.left = this.positionX +"vw";
-    parentElm.appendChild(this.obstacleDiv);
+    this.parentElm.appendChild(this.obstacleDiv);
   }
   moveDown() {
     this.positionY--;
     this.obstacleDiv.style.bottom = this.positionY + "vh";
-
-
+    this.checkDeath();
+  }
+  checkDeath() {
+    if(this.positionY < -10) {
+      this.parentElm.removeChild(this.obstacleDiv);
+      obstacles.shift();
+    }
   }
 }
 myPlayer = new Player();
 const obstacles = [];
-setInterval(() =>  obstacles.push(new Obstacle), 5000);
+setInterval(() => { 
+  obstacles.push(new Obstacle);
+  console.log(obstacles)
+}, 5000);
 setInterval(() => {
   for (obstacle of obstacles) {
     obstacle.moveDown();
